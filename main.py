@@ -1,6 +1,7 @@
 import csv
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+import re
 # define input path
 
 input_path = "input.csv"  # Path to your CSV file with URLs
@@ -28,23 +29,49 @@ def scrape_page(url):
     driver = webdriver.Chrome()  # Make sure you've installed the ChromeDriver
     driver.get(url)
 
-    #     get value y, save into output row object etc
-    #         date prepared by
-    #         date last reviewed
-    #         date last tested
-    #         days since last tested
-    #         who tested by
-    #         "Feedback and contact information" header present
-    # 	      "Reporting accessibility problems" header present
-    #         "Enforcement procedure" header present
-    #         compliance status
+
+    # Deena
+
+    # Function to extract a date from text using regex
+    # Matches dates like "31 March 2023"
+    def extract_date_from_text(text):
+        date_pattern = r'\b\d{1,2} \w+ \d{4}\b'
+        match = re.search(date_pattern, text)
+        if match:
+            return match.group()  # Return the first matched date
+        return None
+
+    # Method to return the Return Date
+    def get_return_date(driver):
+        paragraphs = driver.find_elements(By.TAG_NAME, "p")
+        for paragraph in paragraphs:
+            if "prepared on" in paragraph.text:
+                return extract_date_from_text(paragraph.text)
+        return "Not Found"
+
+    # Method to return the Last Reviewed Date
+    def get_last_reviewed_date(driver):
+        paragraphs = driver.find_elements(By.TAG_NAME, "p")
+        for paragraph in paragraphs:
+            if "last reviewed on" in paragraph.text:
+                return extract_date_from_text(paragraph.text)
+        return "Not Found"
+
+    # Method to return the Last Tested Date
+    def get_last_tested_date(driver):
+        paragraphs = driver.find_elements(By.TAG_NAME, "p")
+        for paragraph in paragraphs:
+            if "last tested on" in paragraph.text:
+                return extract_date_from_text(paragraph.text)
+        return "Not Found"
+
 
     # Extract data - placeholders
     data = {
         "URL": url,
-        # "Date Prepared By": date_prepared_by(),
-        # "Date Last Reviewed": date_last_reviewed(),
-        # "Date Last Tested": date_last_tested(),
+          "Date Prepared By": get_return_date(driver),
+          "Date Last Reviewed": get_last_reviewed_date(driver),
+          "Date Last Tested": get_last_tested_date(driver),
         # "Days Since Last Tested": days_since_last_tested(),
         # "Who Tested By": who_tested_by(),
         "Feedback Header Present": check_header_present(driver, 'Feedback and contact information'),
@@ -60,7 +87,7 @@ def scrape_page(url):
 with open(input_path, newline='') as csvfile:
     reader = csv.DictReader(csvfile)
     for row in reader:
-        url = row['URL']
+        url = row['Statement URL']
         # Call a function to scrape the required data from the page
 
         scraped_data = scrape_page(url)
