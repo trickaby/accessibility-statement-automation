@@ -106,4 +106,3 @@ print(output_data)
 
 # Helper function to check if a header is present
 
-# any cleanup
