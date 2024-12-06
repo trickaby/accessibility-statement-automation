@@ -1,29 +1,3 @@
-import csv
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-import re
-# define input path
-
-input_path = "input.csv"  # Path to your CSV file with URLs
-output_path = "output.csv"  # Path where you want to store the scraped data
-
-# define output object & columns
-output_columns = [
-    "URL", "Date Prepared By", "Date Last Reviewed", "Date Last Tested",
-    "Days Since Last Tested", "Who Tested By", "Feedback Header Present",
-    "Reporting Problems Header Present", "Enforcement Procedure Header Present",
-    "Compliance Status"
-]
-output_data = []
-
-# iterate through input rows
-def check_header_present(driver, header_text):
-    try:
-        header = driver.find_element(By.XPATH, f"//*[contains(text(), '{header_text}')]")
-        return "Yes" if header else "No"
-    except:
-        return "No"
-
 
 def scrape_page(url):
     driver = webdriver.Chrome()  # Make sure you've installed the ChromeDriver
