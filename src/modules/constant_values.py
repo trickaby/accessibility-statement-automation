@@ -1,5 +1,5 @@
-input_path = "src/data/input.csv"
-output_path = "src/data/output.csv"
+input_path = "data/input.csv"
+output_path = "data/output.csv"
 
 output_columns = [
     "URL", "Date Prepared By", "Date Last Reviewed", "Date Last Tested",
@@ -9,3 +9,7 @@ output_columns = [
 ]
 
 output_date_format = "%d/%m/%Y" #DD/MM/YYYY
+
+partially_compliant_format = "Partial"
+fully_compliant_format = "Full"
+non_compliance_format = "None"
