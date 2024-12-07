@@ -7,9 +7,15 @@ from selenium.webdriver.common.by import By
 from src.modules.constant_values import partially_compliant_format, fully_compliant_format, non_compliance_format
 from src.modules.date_parser import extract_date_from_text
 
+from datetime import datetime
 
-def scrape_page(url):
-    driver = webdriver.Chrome()
+date_tested = ""
+
+def open_page(url, is_headless):
+    options = webdriver.ChromeOptions()
+    if is_headless:
+        options.add_argument('--headless')
+    driver = webdriver.Chrome(options=options)
     driver.get(url)
     return driver
 
@@ -20,7 +26,6 @@ def check_header_present(driver, header_text):
     except NoSuchElementException:
         return "No"
 
-
 def get_prepared_date(driver):
     return get_date_by_keywords(driver,"prepared on")
 
@@ -28,9 +33,12 @@ def get_last_reviewed_date(driver):
     return get_date_by_keywords(driver, "last reviewed on")
 
 def get_last_tested_date(driver):
-    return get_date_by_keywords(driver, "last tested on")
+    global date_tested
+    date_tested = get_date_by_keywords(driver, "last tested on")
+    return date_tested
 
-
+def days_since_last_tested():
+    return (datetime.now() - datetime.strptime(date_tested, "%d/%m/%Y")).days
 
 def extract_sentences_from_page(driver):
     page_content = driver.find_element("tag name", "body").text
@@ -71,7 +79,7 @@ def get_text_under_header(driver, header_text):
 
 
 def extract_who_carried_out(who_tested_sentence):
-    # needs refinement, currently bit of a placeholder
+    # needs refinement, currently a bit of a placeholder
     pattern = r"carried out(?: internally)? by (.+)"
 
     match = re.search(pattern, who_tested_sentence)
