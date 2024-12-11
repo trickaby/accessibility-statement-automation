@@ -1,3 +1,14 @@
+import csv
+import re
+
+from selenium.webdriver.chrome import webdriver
+from selenium.webdriver.common.by import By
+
+from src.main import output_data
+from src.modules.constant_values import input_path, output_path, output_columns
+from src.modules.web_scraper import check_header_present
+
+
 
 def scrape_page(url):
     driver = webdriver.Chrome()  # Make sure you've installed the ChromeDriver
@@ -16,7 +27,7 @@ def scrape_page(url):
         return None
 
     # Method to return the Return Date
-    def get_return_date(driver):
+    def get_prepared_by_date(driver):
         paragraphs = driver.find_elements(By.TAG_NAME, "p")
         for paragraph in paragraphs:
             if "prepared on" in paragraph.text:
@@ -43,7 +54,7 @@ def scrape_page(url):
     # Extract data - placeholders
     data = {
         "URL": url,
-          "Date Prepared By": get_return_date(driver),
+          "Date Prepared By": get_prepared_by_date(driver),
           "Date Last Reviewed": get_last_reviewed_date(driver),
           "Date Last Tested": get_last_tested_date(driver),
         # "Days Since Last Tested": days_since_last_tested(),
