@@ -9,6 +9,16 @@ from src.modules.constant_values import input_path, output_path, output_columns
 from src.modules.web_scraper import check_header_present
 
 
+import csv
+import re
+
+from selenium.webdriver.chrome import webdriver
+from selenium.webdriver.common.by import By
+
+from src.main import output_data
+from src.modules.constant_values import input_path, output_path, output_columns
+from src.modules.web_scraper import check_header_present
+
 
 def scrape_page(url):
     driver = webdriver.Chrome()  # Make sure you've installed the ChromeDriver
