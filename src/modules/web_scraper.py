@@ -4,7 +4,8 @@ from selenium import webdriver
 from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 
-from src.modules.constant_values import partially_compliant_format, fully_compliant_format, non_compliance_format
+from src.modules.constant_values import partially_compliant_format, fully_compliant_format, non_compliance_format, \
+    output_date_format
 from src.modules.date_parser import extract_date_from_text
 
 from datetime import datetime
@@ -38,7 +39,7 @@ def get_last_tested_date(driver):
     return date_tested
 
 def days_since_last_tested():
-    return (datetime.now() - datetime.strptime(date_tested, "%d/%m/%Y")).days
+    return (datetime.now() - datetime.strptime(date_tested, output_date_format)).days
 
 def extract_sentences_from_page(driver):
     page_content = driver.find_element("tag name", "body").text
