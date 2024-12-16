@@ -16,7 +16,7 @@ class TestWebScraper(unittest.TestCase):
         self.assertEqual(title, "Accessibility statement for National Maritime Single Window")
 
     def test_check_header_present(self):
-        actual = check_header_present(self.driver, "Example Domain")
+        actual = check_header_present(self.driver, "Accessibility statement for National Maritime Single Window ")
         self.assertEqual(actual, "Yes")
 
     def test_check_header_no(self):
@@ -24,14 +24,12 @@ class TestWebScraper(unittest.TestCase):
         self.assertEqual(actual, "No")
 
     def test_check_header_non_header(self):
-        actual = check_header_present(self.driver, "This domain is")
+        actual = check_header_present(self.driver, "Accessibility statement for National Maritime Single Window")
         self.assertEqual(actual, "No")
 
     def test_date_last_tested_present(self):
         actual = get_last_tested_date(self.driver)
         self.assertIsNotNone(actual,"The returned date is not None")
-        # date_string = self.driver.get_date(get_last_tested_date(self.driver))
-        # self.assertIsInstance(date_string,date, "The returned value is a date")
 
     def test_date_last_tested_not_present(self):
         actual = get_last_tested_date(self.driver)
@@ -52,8 +50,3 @@ class TestWebScraper(unittest.TestCase):
     def test_return_prepared_by_date_not_present(self):
         actual = get_prepared_date(self.driver)
         self.assertIsNone(actual, "The returned date is None")
-
-
-
-
-
