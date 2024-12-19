@@ -4,22 +4,25 @@ from selenium import webdriver
 from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 
-from src.modules.constant_values import partially_compliant_format, fully_compliant_format, non_compliance_format
+from src.modules.constant_values import partially_compliant_format, fully_compliant_format, non_compliance_format, \
+    output_date_format
 from src.modules.date_parser import extract_date_from_text
 
+from datetime import datetime
 
-def scrape_page(url):
-    driver = webdriver.Chrome()
+date_tested = ""
+
+def open_page(url, is_headless):
+    options = webdriver.ChromeOptions()
+    if is_headless:
+        options.add_argument('--headless')
+    driver = webdriver.Chrome(options=options)
     driver.get(url)
     return driver
 
 def check_header_present(driver, header_text):
-    try:
-        header = driver.find_element(By.XPATH, f"//*[contains(text(), '{header_text}')]")
-        return "Yes" if header else "No"
-    except NoSuchElementException:
-        return "No"
-
+    header = iterate_through_headers(driver, f"[contains(text(), '{header_text}')]")
+    return "Yes" if header else "No"
 
 def get_prepared_date(driver):
     return get_date_by_keywords(driver,"prepared on")
@@ -28,9 +31,12 @@ def get_last_reviewed_date(driver):
     return get_date_by_keywords(driver, "last reviewed on")
 
 def get_last_tested_date(driver):
-    return get_date_by_keywords(driver, "last tested on")
+    global date_tested
+    date_tested = get_date_by_keywords(driver, "last tested on")
+    return date_tested
 
-
+def days_since_last_tested():
+    return (datetime.now() - datetime.strptime(date_tested, output_date_format)).days
 
 def extract_sentences_from_page(driver):
     page_content = driver.find_element("tag name", "body").text
@@ -42,7 +48,7 @@ def get_sentence_by_keyword(driver, text):
     for sentence in sentences:
         if text in sentence:
             return sentence
-    return "Not Found"
+    return "Not found"
 
 def get_date_by_keywords(driver, text):
     sentence = get_sentence_by_keyword(driver, text)
@@ -62,17 +68,10 @@ def compliance_status(driver):
         return "Not found"
 
 def get_text_under_header(driver, header_text):
-    selector = f"//h2[normalize-space()='{header_text}']/following-sibling::p[1]"
-    try:
-        element = driver.find_element("xpath", selector)
-        return element.text
-    except NoSuchElementException:
-        return None
-
+    return iterate_through_headers(driver, f"[normalize-space()='{header_text}']/following-sibling::p[1]")
 
 def extract_who_carried_out(who_tested_sentence):
-    # needs refinement, currently bit of a placeholder
-    pattern = r"carried out(?: internally)? by (.+)"
+    pattern = r"carried out(?: [\w\s]+)? by ([\w\s]+)"
 
     match = re.search(pattern, who_tested_sentence)
     if match:
@@ -82,4 +81,16 @@ def extract_who_carried_out(who_tested_sentence):
 
 def who_tested_by(driver):
     who_tested_sentence = get_sentence_by_keyword(driver, "carried out")
-    return extract_who_carried_out(who_tested_sentence)
+    return extract_who_carried_out(who_tested_sentence).capitalize()
+
+def iterate_through_headers(driver, xpath_filter):
+    result = None
+    for i in range(1, 7):
+        xpath = f"//h{i}" + xpath_filter
+        try:
+            element = driver.find_element("xpath", xpath)
+            result = element.text
+        except NoSuchElementException:
+            continue
+    return result
+
