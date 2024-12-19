@@ -1,14 +1,12 @@
 import re
+from datetime import datetime
 
 from selenium import webdriver
 from selenium.common import NoSuchElementException
-from selenium.webdriver.common.by import By
 
 from src.modules.constant_values import partially_compliant_format, fully_compliant_format, non_compliance_format, \
     output_date_format
 from src.modules.date_parser import extract_date_from_text
-
-from datetime import datetime
 
 date_tested = ""
 
