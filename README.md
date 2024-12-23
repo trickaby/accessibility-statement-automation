@@ -3,9 +3,27 @@
 ### Project overview
 This project automates the process of verifying content in accessibility statements.
 
-### Steps for installing chromedriver
+### Steps for installing chromedriver on MacBook
+Prerequisites:
+- Install latest version of Home brew on MacBook
 
-
+1. Install ChromeDriver
+-Open the Terminal application on your Mac.
+-Run the following command to install ChromeDriver via Homebrew:
+brew install chromedriver
+-Wait for the installation to complete. Homebrew will download and set up the latest version of ChromeDriver.
+2. Verify Installation
+-To ensure ChromeDriver was installed correctly, run:
+chromedriver --version
+-This will display the installed version of ChromeDriver.
+3. Upgrade ChromeDriver
+-To upgrade ChromeDriver to the latest version, use the following command:
+brew upgrade chromedriver
+-This will download and install the latest version if one is available.
+4. Keep ChromeDriver Up to Date
+-To update Homebrew itself and all installed packages (including ChromeDriver), run:
+brew update
+brew upgrade
 
 ### Steps for running the app
 
