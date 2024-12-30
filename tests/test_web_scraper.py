@@ -3,7 +3,7 @@ import unittest
 from src.modules.constant_values import partially_compliant_format
 from src.modules.web_scraper import open_page, check_header_present, get_last_reviewed_date, get_last_tested_date, \
     get_prepared_date, extract_sentences_from_page, get_sentence_by_keyword, compliance_status, get_text_under_header, \
-    extract_who_carried_out
+    extract_who_carried_out, wcag_version, check_legal_compliance, list_non_compliant_headings, non_accessible_content
 
 
 class TestWebScraper(unittest.TestCase):
@@ -61,10 +61,9 @@ class TestWebScraper(unittest.TestCase):
             ("partially compliant", "This website is partially compliant with the Web Content Accessibility Guidelines version 2.1 AA standard, due to the non-compliances listed below."),
             ("No sentence!", "Not found"),
         ]
-
         for keyword, expected_output in test_cases:
             actual = get_sentence_by_keyword(self.driver, keyword)
-            with self.subTest(input_date=keyword, expected_output=expected_output):
+            with self.subTest(input_date=keyword):
                 self.assertEqual(expected_output, actual)
 
     def test_compliance_status(self):
@@ -85,4 +84,36 @@ class TestWebScraper(unittest.TestCase):
         ]
         for sentence, expected_output in test_cases:
             actual = extract_who_carried_out(sentence)
-            self.assertEqual(expected_output, actual)
+            with self.subTest(actual=actual, expected=expected_output):
+                self.assertEqual(expected_output, actual)
+
+    def test_wcag_version(self):
+        actual = wcag_version(self.driver)
+        self.assertEqual("2.1", actual)
+
+    def test_legal_compliance(self):
+        headings = {
+            "test1": "Yes",
+            "test2": "Yes"
+        }
+        actual = check_legal_compliance(headings)
+        self.assertEqual("Yes", actual)
+        headings.update({"test3": "No"})
+        actual2 = check_legal_compliance(headings)
+        self.assertEqual("No", actual2)
+
+    def test_list_non_compliant_headings(self):
+        test_cases = [
+            ({"test1": "Yes", "test2": "No"}, "test2"),
+            ({"test1": "No","test2": "No"}  , "test1, test2"),
+            ({}                             , "N/A")
+        ]
+        for headings, expected_output in test_cases:
+            actual = list_non_compliant_headings(headings)
+            with self.subTest(actual=actual, expected=expected_output):
+                self.assertEqual(expected_output, actual)
+
+
+    def test_non_accessible_content(self):
+      actual = non_accessible_content(self.driver)
+      self.assertIsNotNone(actual)

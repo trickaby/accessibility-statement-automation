@@ -101,19 +101,19 @@ def wcag_version(driver):
     return "Not found"
 
 def check_legal_compliance(headings):
-    return "No" if "No" in headings else "Yes"
+    return "No" if "No" in headings.values() else "Yes"
 
 def list_non_compliant_headings(headings):
     non_compliant_list = []
-    for heading in headings:
-        if heading == "No" :
+    for heading, compliance in headings.items():
+        if compliance == "No" :
             non_compliant_list.append(heading)
     if not non_compliant_list:
         return "N/A"
-    return non_compliant_list
+    return ", ".join(non_compliant_list)
 
 def non_accessible_content(driver):
-    elements = driver.find_elements("xpath", "//h3/following-sibling::*[not(self::h1 or self::h2 or self::h4 or self::h5 or self::h6)] ")
+    elements = driver.find_elements("xpath", "//h3/following-sibling::*[not(self::h1 or self::h2 or self::h4 or self::h5 or self::h6)]")
     text = ""
     for element in elements :
         if "h" in element.tag_name:
