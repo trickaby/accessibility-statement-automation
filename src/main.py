@@ -6,7 +6,7 @@ from src.modules.web_scraper import open_page, check_header_present, get_prepare
 
 output_data = []
 
-def scrape_page(driver):
+def scrape_page(driver, product_name):
     data = {}
     dates = {
         "Prepared by date": get_prepared_date(driver),
@@ -35,13 +35,13 @@ def scrape_page(driver):
         "WCAG": wcag_version(driver),
     })
 
-    data.update({"Non-accessible content": non_accessible_content(driver)})
+    data.update({"Non-accessible content": non_accessible_content(driver, product_name)})
     return data
 
 def main():
-    run_logic(input_path, False)
+    run_logic(input_path, output_path, False)
 
-def run_logic(input_file, is_headless):
+def run_logic(input_file,output_file_path, is_headless):
     input_data = read_input_csv(input_file)
     for row in input_data:
         url = "No URL found"
@@ -50,16 +50,17 @@ def run_logic(input_file, is_headless):
                 url = value
         try:
             driver = open_page(url, is_headless)
+            product_name = row.get("Product name", "Product name not found")
             data = {
-                "Product name": row.get("Product name", "Product name not found"),
+                "Product name": product_name,
             }
-            data.update(scrape_page(driver))
+            data.update(scrape_page(driver, product_name))
             driver.quit()
             output_data.append(data)
         except Exception as e:
             print(f"Row {row.get('Product name', 'not found')}: Failed to scrape {url}. Error: {e}")
     headers = output_data[0].keys()
-    return write_output_csv(output_path, output_data, headers)
+    return write_output_csv(output_file_path, output_data, headers)
 
 if __name__ == "__main__":
     main()

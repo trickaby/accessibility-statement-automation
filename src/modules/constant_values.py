@@ -4,6 +4,8 @@ root_dir = Path(__file__).resolve().parent.parent.parent
 
 input_path = "tests/data/input.csv"
 output_path = "src/data/output.csv"
+output_path_dir = "src/data/"
+text_dir = "src/data/text/"
 
 output_date_format = "%d/%m/%Y" #DD/MM/YYYY
 

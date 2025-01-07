@@ -6,6 +6,7 @@ from selenium.common import NoSuchElementException
 
 from src.modules.constant_values import partially_compliant_format, fully_compliant_format, non_compliance_format, \
     output_date_format
+from src.modules.data_handler import write_text_to_file
 from src.modules.date_parser import extract_date_from_text
 
 def open_page(url, is_headless):
@@ -112,11 +113,12 @@ def list_non_compliant_headings(headings):
         return "N/A"
     return ", ".join(non_compliant_list)
 
-def non_accessible_content(driver):
+def non_accessible_content(driver, product_name):
     elements = driver.find_elements("xpath", "//h3/following-sibling::*[not(self::h1 or self::h2 or self::h4 or self::h5 or self::h6)]")
     text = ""
     for element in elements :
         if "h" in element.tag_name:
             break
         text += element.text + "\n"
-    return text
+
+    return write_text_to_file(product_name + " - Non-accessible content", text)
