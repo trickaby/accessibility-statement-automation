@@ -6,9 +6,8 @@ from selenium.common import NoSuchElementException
 
 from src.modules.constant_values import partially_compliant_format, fully_compliant_format, non_compliance_format, \
     output_date_format
+from src.modules.data_handler import write_text_to_file
 from src.modules.date_parser import extract_date_from_text
-
-date_tested = ""
 
 def open_page(url, is_headless):
     options = webdriver.ChromeOptions()
@@ -29,11 +28,9 @@ def get_last_reviewed_date(driver):
     return get_date_by_keywords(driver, "last reviewed on")
 
 def get_last_tested_date(driver):
-    global date_tested
-    date_tested = get_date_by_keywords(driver, "last tested on")
-    return date_tested
+    return get_date_by_keywords(driver, "last tested on")
 
-def days_since_last_tested():
+def days_since_last_tested(date_tested):
     return (datetime.now() - datetime.strptime(date_tested, output_date_format)).days
 
 def extract_sentences_from_page(driver):
@@ -79,7 +76,9 @@ def extract_who_carried_out(who_tested_sentence):
 
 def who_tested_by(driver):
     who_tested_sentence = get_sentence_by_keyword(driver, "carried out")
-    return extract_who_carried_out(who_tested_sentence).capitalize()
+    if "Home Office" in who_tested_sentence :
+        return "Home Office"
+    else : return extract_who_carried_out(who_tested_sentence).capitalize()
 
 def iterate_through_headers(driver, xpath_filter):
     result = None
@@ -92,3 +91,35 @@ def iterate_through_headers(driver, xpath_filter):
             continue
     return result
 
+def wcag_version(driver):
+    header = "Compliance status"
+    compliance_status_paragraph = get_text_under_header(driver, header)
+
+    if "2.1" in compliance_status_paragraph:
+        return "2.1"
+    elif "2.2" in compliance_status_paragraph:
+      return "2.2"
+    return "Not found"
+
+def check_legal_compliance(headings):
+    return "No" if "No" in headings.values() else "Yes"
+
+def list_non_compliant_headings(headings):
+    non_compliant_list = []
+    for heading, compliance in headings.items():
+        if compliance == "No" :
+            non_compliant_list.append(heading)
+    if not non_compliant_list:
+        return "N/A"
+    return ", ".join(non_compliant_list)
+
+def non_accessible_content(driver, product_name):
+    elements = driver.find_elements("xpath", "//h3/following-sibling::*[not(self::h1 or self::h2 or self::h4 or self::h5 or self::h6)]")
+    text = ""
+    for element in elements :
+        if "h" in element.tag_name:
+            break
+        text += element.text + "\n"
+
+    text_file_uri = write_text_to_file(product_name + " - Non-accessible content.txt", text)
+    return f"=HYPERLINK(\"{text_file_uri}\", \"Link to text\")"

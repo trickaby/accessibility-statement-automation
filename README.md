@@ -39,4 +39,8 @@ Prerequisites:
     - Windows: <code>venv\Scripts\activate</code>
     - Mac/Linux: <code>source venv/bin/activate</code>
 4. Install dependencies: <code>pip install -r requirements.txt</code>
-5. ### Run: <code>python app.py</code> 
+5. ### Run: <code>python app.py</code>
+6. Deactivate virtual environment: <code>deactivate</code>
+7. Delete venv folder:
+   - Windows: <code>rmdir venv</code>
+   - Mac/Linux: <code>rm -rf venv/</code>
