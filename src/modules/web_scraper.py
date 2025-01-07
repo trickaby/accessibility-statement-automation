@@ -121,4 +121,5 @@ def non_accessible_content(driver, product_name):
             break
         text += element.text + "\n"
 
-    return write_text_to_file(product_name + " - Non-accessible content", text)
+    text_file_uri = write_text_to_file(product_name + " - Non-accessible content.txt", text)
+    return f"=HYPERLINK(\"{text_file_uri}\", \"Link to text\")"
