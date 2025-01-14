@@ -63,7 +63,7 @@ def compliance_status(driver):
         return "Not found"
 
 def get_text_under_header(driver, header_text):
-    return iterate_through_headers(driver, f"[normalize-space()='{header_text}']/following-sibling::p[1]")
+    return iterate_through_headers(driver, f"[contains(.,'{header_text}')]/following-sibling::p[1]")
 
 def extract_who_carried_out(who_tested_sentence):
     pattern = r"carried out(?: [\w\s]+)? by ([\w\s]+)"
@@ -123,3 +123,38 @@ def non_accessible_content(driver, product_name):
 
     text_file_uri = write_text_to_file(product_name + " - Non-accessible content.txt", text)
     return f"=HYPERLINK(\"{text_file_uri}\", \"Link to text\")"
+
+
+def extract_phone_from_text(text):
+    if text is None:
+        return "N/A"
+    phone_pattern = r'\b(?:\+44|0)(?:\s?\d\s?|\d{2,4}\s?)(?:\d\s?){6,10}\b'
+    match = re.search(phone_pattern, text)
+    return match.group(0).replace(" ", "") if match else "N/A"
+
+
+def extract_email_from_text(text):
+    if text is None:
+        return "N/A"
+    email_pattern = r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
+    match = re.search(email_pattern, text)
+    return match.group(0).replace(" ", "") if match else "N/A"
+
+
+
+def feedback_contact_email(driver):
+    text = get_text_under_header(driver, "Feedback and contact information")
+    return extract_email_from_text(text)
+
+
+def feedback_contact_phone(driver):
+    text = get_text_under_header(driver, "Feedback and contact information")
+    return extract_phone_from_text(text)
+
+def reporting_contact_email(driver):
+    text = get_text_under_header(driver, "Reporting accessibility problems")
+    return extract_email_from_text(text)
+
+def reporting_contact_phone(driver):
+    text = get_text_under_header(driver, "Reporting accessibility problems")
+    return extract_phone_from_text(text)

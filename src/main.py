@@ -2,7 +2,8 @@ from src.modules.constant_values import input_path, output_path
 from src.modules.data_handler import read_input_csv, write_output_csv
 from src.modules.web_scraper import open_page, check_header_present, get_prepared_date, get_last_reviewed_date, \
     get_last_tested_date, compliance_status, who_tested_by, days_since_last_tested, wcag_version, \
-    check_legal_compliance, list_non_compliant_headings, non_accessible_content
+    check_legal_compliance, list_non_compliant_headings, non_accessible_content, feedback_contact_email, \
+    feedback_contact_phone, reporting_contact_email, reporting_contact_phone
 
 output_data = []
 
@@ -21,11 +22,11 @@ def scrape_page(driver, product_name):
     data.update({"Who Tested By": who_tested_by(driver)})
 
     legal_wording = {
-        "Feedback wording": check_header_present(driver, 'Feedback and contact information'),
-        "Reporting Problems wording": check_header_present(driver, 'Reporting accessibility problems'),
-        "Enforcement Procedure wording": check_header_present(driver, 'Enforcement procedure'),
+        "Feedback header - wording": check_header_present(driver, 'Feedback and contact information'),
+        "Reporting Problems - wording": check_header_present(driver, 'Reporting accessibility problems with this website'),
+        "Enforcement Procedure - wording": check_header_present(driver, 'Enforcement procedure'),
     }
-    legal_wording.update({"Legal compliance wording": check_legal_compliance(legal_wording)})
+    legal_wording.update({"Legal compliance - wording": check_legal_compliance(legal_wording)})
     legal_wording.update({"Legal wording not present": list_non_compliant_headings(legal_wording)})
 
     data.update(legal_wording)
@@ -33,6 +34,13 @@ def scrape_page(driver, product_name):
     data.update({
         "Compliance Status": compliance_status(driver),
         "WCAG": wcag_version(driver),
+    })
+
+    data.update({
+        "Feedback contact email": feedback_contact_email(driver),
+        "Feedback contact phone": feedback_contact_phone(driver),
+        "Reporting problems contact email": reporting_contact_email(driver),
+        "Reporting problems contact phone": reporting_contact_phone(driver),
     })
 
     data.update({"Non-accessible content": non_accessible_content(driver, product_name)})
