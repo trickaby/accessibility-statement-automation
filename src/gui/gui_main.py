@@ -2,6 +2,7 @@ import os
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 
+from src.gui.gui_styles import AppStyle
 from src.main import run_logic
 from src.modules.constant_values import output_path_dir
 from src.modules.data_handler import open_csv
@@ -33,31 +34,35 @@ def start_gui():
             messagebox.showinfo("Success", f"Scraper completed. Results written to: {result}")
             response = messagebox.askyesno("Open report", "Open accessibility report")
             if response:
-               open_csv(result)
+                open_csv(result)
         except Exception as e:
             messagebox.showerror("Error", f"An error occurred: {str(e)}")
 
     root.title("Accessibility Statement automation")
-    selected_file = tk.StringVar()
-    headless_var = tk.BooleanVar(value=False)
+    root.geometry("900x600")
+    AppStyle(root)
+
+    frame = tk.Frame(root, bg="#f9f9f9", padx=10, pady=10)
+    frame.pack(padx=20, pady=20)
+
     # File upload section
-    ttk.Label(root, text="Step 1: Upload a CSV File").pack(pady=5)
-    upload_button = ttk.Button(root, text="Upload CSV", command=upload_file)
-    upload_button.pack(pady=5)
-    file_label = ttk.Label(root, text="No file selected", wraplength=350)
+    selected_file = tk.StringVar()
+
+    ttk.Label(frame, style="Header.TLabel", text="Step 1: Upload a CSV File").pack(padx=10, pady=10)
+
+    ttk.Button(frame, style='TButton', text="Upload CSV", command=upload_file).pack(pady=5)
+    file_label = ttk.Label(frame, style='TLabel', text="No file selected", wraplength=350)
     file_label.pack(pady=5)
 
     # Options section
-    ttk.Label(root, text="Step 2: Configure Options").pack(pady=10)
-    headless_checkbox = ttk.Checkbutton(root, text="Run Headless", variable=headless_var)
-    headless_checkbox.pack(pady=5)
+    ttk.Label(frame, style='Header.TLabel', text="Step 2: Configure Options").pack(padx=10, pady=10)
+    headless_var = tk.BooleanVar(value=False)
+    ttk.Checkbutton(frame, style='TCheckbutton', text="Run Headless", variable=headless_var).pack(pady=5)
 
     # Run button
-    ttk.Label(root, text="Step 3: Run the Scraper").pack(pady=10)
-    run_button = ttk.Button(root, text="Go", command=run_scraper)
-    run_button.pack(pady=20)
+    ttk.Label(frame, style='Header.TLabel', text="Step 3: Run the Scraper").pack(padx=10, pady=10)
+    ttk.Button(frame, style='TButton', text="Go", command=run_scraper).pack(pady=20)
 
     # Stop button
-    stop_button = ttk.Button(root, text='Finish', command=root.destroy)
-    stop_button.pack(pady=20)
+    ttk.Button(frame, style='TButton', text='Finish', command=root.destroy).pack(pady=20)
     root.mainloop()
