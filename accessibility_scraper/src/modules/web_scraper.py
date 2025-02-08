@@ -4,10 +4,11 @@ from datetime import datetime
 from selenium import webdriver
 from selenium.common import NoSuchElementException
 
-from src.modules.constant_values import partially_compliant_format, fully_compliant_format, non_compliance_format, \
-    output_date_format
-from src.modules.data_handler import write_text_to_file
-from src.modules.date_parser import extract_date_from_text
+from accessibility_scraper.src.modules.constant_values import output_date_format, partially_compliant_format, \
+    fully_compliant_format, non_compliance_format
+from accessibility_scraper.src.modules.data_handler import write_text_to_file
+from accessibility_scraper.src.modules.date_parser import extract_date_from_text
+
 
 def open_page(url, is_headless):
     options = webdriver.ChromeOptions()

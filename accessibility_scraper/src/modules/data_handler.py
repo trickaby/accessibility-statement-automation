@@ -2,7 +2,7 @@ import csv
 import os
 import webbrowser
 from pathlib import Path
-from src.modules.constant_values import root_dir, text_dir
+from accessibility_scraper.src.modules.constant_values import root_dir, text_dir
 
 
 def read_input_csv(input_path):

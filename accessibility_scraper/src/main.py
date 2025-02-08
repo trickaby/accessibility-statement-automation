@@ -1,9 +1,9 @@
-from src.modules.constant_values import input_path, output_path
-from src.modules.data_handler import read_input_csv, write_output_csv
-from src.modules.web_scraper import open_page, check_header_present, get_prepared_date, get_last_reviewed_date, \
-    get_last_tested_date, compliance_status, who_tested_by, days_since_last_tested, wcag_version, \
-    check_legal_compliance, list_non_compliant_headings, non_accessible_content, feedback_contact_email, \
-    feedback_contact_phone, reporting_contact_email, reporting_contact_phone
+from accessibility_scraper.src.modules.constant_values import input_path, output_path
+from accessibility_scraper.src.modules.data_handler import read_input_csv, write_output_csv
+from accessibility_scraper.src.modules.web_scraper import get_prepared_date, get_last_reviewed_date, \
+    get_last_tested_date, days_since_last_tested, who_tested_by, check_header_present, list_non_compliant_headings, \
+    check_legal_compliance, compliance_status, wcag_version, feedback_contact_email, feedback_contact_phone, \
+    reporting_contact_email, reporting_contact_phone, non_accessible_content, open_page
 
 output_data = []
 

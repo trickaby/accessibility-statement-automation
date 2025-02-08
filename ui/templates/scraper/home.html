@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload a file | Accessibility Statement Automation</title>
+</head>
+<body>
+    <h1>Step 1: Upload a CSV File</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Upload and Run</button>
+    </form>
+</body>
+</html>

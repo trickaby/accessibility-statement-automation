@@ -1,6 +1,6 @@
 import unittest
 
-from src.modules.date_parser import extract_date_from_text
+from accessibility_scraper.src.modules.date_parser import extract_date_from_text
 
 
 class TestDateParser(unittest.TestCase):
