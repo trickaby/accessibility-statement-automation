@@ -4,6 +4,8 @@ from django.conf import settings
 from django.http import HttpResponse
 
 from accessibility_scraper.src.main import run_logic
+from accessibility_scraper.src.modules.ollama_config import OllamaConfig
+from accessibility_scraper.src.modules.scraper_config import ScraperConfig
 from .forms import UploadFileForm
 import os
 
@@ -18,10 +20,18 @@ def home(request):
             file_path = os.path.join(settings.MEDIA_ROOT, file_name)
             headless_mode = form.cleaned_data['headless_mode']
 
-            # Run your scraper logic
             output_file_path = os.path.join(settings.MEDIA_ROOT, f"Results_{file.name}")
+
+            enable_ai = form.cleaned_data['enable_ai']
+
+            ollama_config = None
+            if enable_ai:
+                ai_model = form.cleaned_data['ai_model']
+                system_prompt = form.cleaned_data['system_prompt']
+                ollama_config = OllamaConfig(ai_model, system_prompt)
+            config = ScraperConfig(file_path, output_file_path, headless_mode, ollama_config)
             try:
-                result = run_logic(file_path, output_file_path, headless_mode)
+                result = run_logic(config)
                 return render(request, 'scraper/result.html', {
                     'result': result,
                     'output_file': output_file_path

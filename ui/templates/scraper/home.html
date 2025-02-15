@@ -2,6 +2,13 @@
 <html>
 <head>
     <title>Upload a file | Accessibility Statement Automation</title>
+    <script>
+        function toggleAIConfig() {
+            const enableAI = document.getElementById('id_enable_ai').checked;
+            document.getElementById('id_ai_model').disabled = !enableAI;
+            document.getElementById('id_system_prompt').disabled = !enableAI;
+        }
+    </script>
 </head>
 <body>
     <h1>Step 1: Upload a CSV File</h1>

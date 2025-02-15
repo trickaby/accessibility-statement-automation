@@ -115,16 +115,17 @@ def list_non_compliant_headings(headings):
     return ", ".join(non_compliant_list)
 
 def non_accessible_content(driver, product_name):
+    text_file_uri = write_text_to_file(product_name + " - Non-accessible content.txt", extract_non_accessible_text(driver))
+    return f"=HYPERLINK(\"{text_file_uri}\", \"Link to text\")"
+
+def extract_non_accessible_text(driver):
     elements = driver.find_elements("xpath", "//h3/following-sibling::*[not(self::h1 or self::h2 or self::h4 or self::h5 or self::h6)]")
     text = ""
     for element in elements :
         if "h" in element.tag_name:
             break
         text += element.text + "\n"
-
-    text_file_uri = write_text_to_file(product_name + " - Non-accessible content.txt", text)
-    return f"=HYPERLINK(\"{text_file_uri}\", \"Link to text\")"
-
+    return text
 
 def extract_phone_from_text(text):
     if text is None:
