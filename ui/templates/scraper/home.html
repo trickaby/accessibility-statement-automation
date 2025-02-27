@@ -3,11 +3,16 @@
 <head>
     <title>Upload a file | Accessibility Statement Automation</title>
     <script>
-        function toggleAIConfig() {
-            const enableAI = document.getElementById('id_enable_ai').checked;
-            document.getElementById('id_ai_model').disabled = !enableAI;
-            document.getElementById('id_system_prompt').disabled = !enableAI;
-        }
+    function toggleAIConfig() {
+        var checkbox = document.getElementById("id_enable_ai");
+        var aiFields = document.querySelectorAll(".ai-config");
+
+        aiFields.forEach(function(field) {
+            field.disabled = !checkbox.checked;
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", toggleAIConfig);
     </script>
 </head>
 <body>

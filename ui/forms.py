@@ -13,12 +13,12 @@ class UploadFileForm(forms.Form):
     ai_model = forms.CharField(
         label="AI Model",
         required=False,
-        widget=forms.TextInput(attrs={'disabled': True})
+        widget=forms.TextInput(attrs={'class': 'ai-config'})
     )
     system_prompt = forms.CharField(
         label="System prompt",
         required=False,
-        widget=forms.Textarea(attrs={'disabled': True})
+        widget=forms.Textarea(attrs={'class': 'ai-config'})
     )
 
     def clean(self):
