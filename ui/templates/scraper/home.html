@@ -8,7 +8,14 @@
         var aiFields = document.querySelectorAll(".ai-config");
 
         aiFields.forEach(function(field) {
-            field.disabled = !checkbox.checked;
+            if (checkbox.checked) {
+                field.disabled = false;
+                field.setAttribute("required", "required");
+            } else {
+                field.disabled = true;
+                field.removeAttribute("required");
+                field.value = "";
+            }
         });
     }
 
