@@ -3,4 +3,6 @@
 /.idea/workspace.xml
 /.idea/
 /.venv/
-/src/data/*
+/accessibility_scraper/src/data/*
+/media/
+*.sqlite3

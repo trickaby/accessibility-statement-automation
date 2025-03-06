@@ -1,10 +1,10 @@
 import unittest
 
-from src.modules.constant_values import partially_compliant_format
-from src.modules.web_scraper import open_page, check_header_present, get_last_reviewed_date, get_last_tested_date, \
-    get_prepared_date, extract_sentences_from_page, get_sentence_by_keyword, compliance_status, get_text_under_header, \
-    extract_who_carried_out, wcag_version, check_legal_compliance, list_non_compliant_headings, non_accessible_content, \
-    extract_email_from_text, extract_phone_from_text
+from accessibility_scraper.src.modules.constant_values import partially_compliant_format
+from accessibility_scraper.src.modules.web_scraper import open_page, check_header_present, get_last_tested_date, \
+    get_last_reviewed_date, get_prepared_date, extract_sentences_from_page, get_sentence_by_keyword, compliance_status, \
+    get_text_under_header, extract_who_carried_out, wcag_version, check_legal_compliance, list_non_compliant_headings, \
+    non_accessible_content, extract_email_from_text, extract_phone_from_text
 
 
 class TestWebScraper(unittest.TestCase):
@@ -58,7 +58,7 @@ class TestWebScraper(unittest.TestCase):
             ("nmsw@homeoffice.gov.uk.",
              "If you find any problems not listed on this page or think we're not meeting accessibility requirements, contact nmsw@homeoffice.gov.uk."),
             ("partially compliant",
-             "This website is partially compliant with the Web Content Accessibility Guidelines version 2.1 AA standard, due to the non-compliances listed below."),
+             "This website is partially compliant with the Web Content Accessibility Guidelines version 2.2 AA standard, due to the non-compliances listed below."),
             ("No sentence!", "Not found"),
         ]
         for keyword, expected_output in test_cases:
@@ -98,7 +98,7 @@ class TestWebScraper(unittest.TestCase):
 
     def test_wcag_version(self):
         actual = wcag_version(self.driver)
-        self.assertEqual("2.1", actual)
+        self.assertEqual("2.2", actual)
 
     def test_legal_compliance(self):
         headings = {
