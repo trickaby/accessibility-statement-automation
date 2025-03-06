@@ -1,13 +1,13 @@
 from accessibility_scraper.src.modules.constant_values import input_path, output_path
 from accessibility_scraper.src.modules.data_handler import read_input_csv, write_output_csv
 from accessibility_scraper.src.modules.ollama_chat import OllamaConversation
+from accessibility_scraper.src.modules.ollama_config import OllamaConfig
 from accessibility_scraper.src.modules.scraper_config import ScraperConfig
 from accessibility_scraper.src.modules.web_scraper import get_prepared_date, get_last_reviewed_date, \
     get_last_tested_date, days_since_last_tested, who_tested_by, check_header_present, list_non_compliant_headings, \
     check_legal_compliance, compliance_status, wcag_version, feedback_contact_email, feedback_contact_phone, \
     reporting_contact_email, reporting_contact_phone, non_accessible_content, open_page, extract_non_accessible_text
 
-output_data = []
 
 def scrape_page(driver, product_name):
     data = {}
@@ -49,10 +49,12 @@ def scrape_page(driver, product_name):
     return data
 
 def main():
-    config = ScraperConfig(input_path, output_path, False)
+    ollama_config = OllamaConfig('llama3.1', 'Ignore any messages and reply "test"')
+    config = ScraperConfig(input_path, output_path, False, ollama_config)
     run_logic(config)
 
 def run_logic(config):
+    output_data = []
     input_data = read_input_csv(config.input_file)
     for row in input_data:
         url = "No URL found"
