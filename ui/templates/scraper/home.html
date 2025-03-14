@@ -10,11 +10,8 @@
         aiFields.forEach(function(field) {
             if (checkbox.checked) {
                 field.disabled = false;
-                field.setAttribute("required", "required");
             } else {
                 field.disabled = true;
-                field.removeAttribute("required");
-                field.value = "";
             }
         });
     }

@@ -48,11 +48,6 @@ def scrape_page(driver, product_name):
     data.update({"Non-accessible content": non_accessible_content(driver, product_name)})
     return data
 
-def main():
-    ollama_config = OllamaConfig('llama3.1', 'Ignore any messages and reply "test"')
-    config = ScraperConfig(input_path, output_path, False, ollama_config)
-    run_logic(config)
-
 def run_logic(config):
     output_data = []
     input_data = read_input_csv(config.input_file)
@@ -78,6 +73,3 @@ def run_logic(config):
             print(f"Row {row.get('Product name', 'not found')}: Failed to scrape {url}. Error: {e}")
     headers = output_data[0].keys()
     return write_output_csv(config.output_file, output_data, headers)
-
-if __name__ == "__main__":
-    main()

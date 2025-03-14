@@ -2,8 +2,16 @@ import ollama
 
 
 class OllamaConversation:
-  def __init__(self, model_name: str, system_prompt: str = None):
+  def __init__(
+          self,
+          model_name: str,
+          system_prompt: str = None,
+          options: dict = None
+  ):
     self.model_name = model_name
+    self.system_prompt = system_prompt
+    self.options = options
+
     self.conversation_history = []
 
     if system_prompt:
@@ -22,7 +30,8 @@ class OllamaConversation:
     response = ollama.chat(
       model=self.model_name,
       messages=self.conversation_history,
-      keep_alive=0
+      keep_alive=0,
+      options=self.options
     )
     model_message = response['message']['content']
 
@@ -35,24 +44,4 @@ class OllamaConversation:
 
   def reset_conversation(self):
     self.conversation_history = []
-
-
-"""
-
-decision - how to output results? probably keep separate for now
-
-1. option to enable ollama in UI
-  c. Text to explain limitations and requirements
-  d. system prompt - pre-populated?
-  e. default values?
-  
-
-
-
-
-
-"""
-
-
-
 

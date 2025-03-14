@@ -127,3 +127,17 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/dev/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+DEFAULT_SYSTEM_PROMPT = """Your task is to assess whether an accessibility issue can be ranked green, amber or red
+Rank green if the issue states:
+A date that the issue will be fixed or reviewed
+references a WCAG criterion number in the format x.x.x
+clearly states what the issue is and can be understood by an end user
+
+rate amber if the issue has the following
+references a WCAG criterion number in the format x.x.x
+clearly states what the issue is and can be understood by an end user
+
+
+Otherwise rank an issue as red
+"""

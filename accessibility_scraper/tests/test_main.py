@@ -9,10 +9,15 @@ multiple csv files can be tested, with varying types of clean and unclean data t
 """
 from unittest import TestCase
 
-from ui.apps import ScraperConfig
+from accessibility_scraper.src.main import run_logic
+from accessibility_scraper.src.modules.constant_values import input_path, output_path
+from accessibility_scraper.src.modules.ollama_config import OllamaConfig
+from accessibility_scraper.src.modules.scraper_config import ScraperConfig
 
 
 class TestMain(TestCase):
 
     def test_config(self):
-        ScraperConfig('file_path', 'output_file_path', True)
+        ollama_config = OllamaConfig('llama3.1', 'Ignore any messages and reply "test"')
+        config = ScraperConfig(input_path, output_path, False, ollama_config)
+        run_logic(config)
