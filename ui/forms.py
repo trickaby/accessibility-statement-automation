@@ -33,90 +33,40 @@ class UploadFileForm(forms.Form):
             },
         )
     )
-    temperature = forms.CharField(
+    temperature = forms.FloatField(
         label="Temperature",
         initial=0.2,
         required=False,
         widget=forms.TextInput(attrs={'class': 'ai-config'}),
+        validators=[MinValueValidator(0.0), MaxValueValidator(2.0)]
     )
-    top_k = forms.CharField(
+    top_k = forms.FloatField(
         label="Top-K",
         initial=20,
         required=False,
         widget=forms.TextInput(attrs={'class': 'ai-config'}),
+        validators=[MinValueValidator(0.0), MaxValueValidator(1000.0)]
     )
-    top_p = forms.CharField(
+    top_p = forms.FloatField(
         label="Top-P (Nucleus sampling)",
         initial=0.3,
         required=False,
         widget=forms.TextInput(attrs={'class': 'ai-config'}),
+        validators=[MinValueValidator(0.0), MaxValueValidator(1.0)]
     )
-    max_tokens = forms.CharField(
+    max_tokens = forms.FloatField(
         label="Max tokens",
         required=False,
         widget=forms.TextInput(attrs={'class': 'ai-config'}),
+        validators=[MinValueValidator(-2.0), MaxValueValidator(131072.0)]
     )
-    repetition_penalty = forms.CharField(
+    repetition_penalty = forms.FloatField(
         label="Repetition Penalty",
         initial=1.2,
         required=False,
         widget=forms.TextInput(attrs={'class': 'ai-config'}),
+        validators=[MinValueValidator(-2.0), MaxValueValidator(2.0)]
     )
-
-    def clean_temperature(self):
-        temperature = self.cleaned_data.get('temperature')
-        if temperature:
-            try:
-                temperature = float(temperature)
-                if not (0.0 <= temperature <= 2.0):
-                    raise ValidationError("Temperature must be between 0.0 and 2.0.")
-                return temperature
-            except (ValueError, TypeError):
-                raise ValidationError("Temperature must be a valid number.")
-
-    def clean_top_k(self):
-        top_k = self.cleaned_data.get('top_k')
-        if top_k:
-            try:
-                top_k = float(top_k)
-                if not (0.0 <= top_k <= 1000.0):
-                    raise ValidationError("Top-K must be between 0.0 and 1000.0.")
-                return top_k
-            except (ValueError, TypeError):
-                raise ValidationError("Top-K must be a valid number.")
-
-    def clean_top_p(self):
-        top_p = self.cleaned_data.get('top_p')
-        if top_p:
-            try:
-                top_p = float(top_p)
-                if not (0.0 <= top_p <= 1.0):
-                    raise ValidationError("Top-P must be between 0.0 and 1.0.")
-                return top_p
-            except (ValueError, TypeError):
-                raise ValidationError("Top-P must be a valid number.")
-
-    def clean_max_tokens(self):
-        max_tokens = self.cleaned_data.get('max_tokens')
-        if max_tokens :
-            try:
-                max_tokens = float(max_tokens)
-                if not (-2.0 <= max_tokens <= 131072.0):
-                    raise ValidationError("Max tokens must be between -2.0 and 131072.0.")
-                return max_tokens
-            except (ValueError, TypeError):
-                raise ValidationError("Max tokens must be a valid number.")
-
-    def clean_repetition_penalty(self):
-        repetition_penalty = self.cleaned_data.get('repetition_penalty')
-        if repetition_penalty:
-            try:
-                repetition_penalty = float(repetition_penalty)
-                if not (-2.0 <= repetition_penalty <= 2.0):
-                    raise ValidationError("Repetition Penalty must be between -2.0 and 2.0.")
-                return repetition_penalty
-            except (ValueError, TypeError):
-                raise ValidationError("Repetition Penalty must be a valid number.")
 
     def clean(self):
         cleaned_data = super().clean()
