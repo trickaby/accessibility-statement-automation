@@ -97,6 +97,7 @@ def iterate_through_headers(driver, xpath_filter):
 def wcag_version(driver):
     header = "Compliance status"
     compliance_status_paragraph = get_text_under_header(driver, header)
+    if compliance_status_paragraph is None : return "Not found"
 
     if "2.1" in compliance_status_paragraph:
         return "2.1"
