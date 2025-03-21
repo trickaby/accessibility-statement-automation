@@ -32,6 +32,7 @@ def get_last_tested_date(driver):
     return get_date_by_keywords(driver, "last tested on")
 
 def days_since_last_tested(date_tested):
+    if date_tested is None : return "Not found"
     return (datetime.now() - datetime.strptime(date_tested, output_date_format)).days
 
 def extract_sentences_from_page(driver):
@@ -72,7 +73,7 @@ def extract_who_carried_out(who_tested_sentence):
     match = re.search(pattern, who_tested_sentence)
     if match:
         return match.group(1).strip()
-    return None
+    return "Not found"
 
 
 def who_tested_by(driver):
@@ -82,7 +83,7 @@ def who_tested_by(driver):
     else : return extract_who_carried_out(who_tested_sentence).capitalize()
 
 def iterate_through_headers(driver, xpath_filter):
-    result = None
+    result = 'Not found'
     for i in range(1, 7):
         xpath = f"//h{i}" + xpath_filter
         try:
