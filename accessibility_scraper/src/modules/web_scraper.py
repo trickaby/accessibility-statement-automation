@@ -54,6 +54,7 @@ def get_date_by_keywords(driver, text):
 def compliance_status(driver):
     header = "Compliance status"
     compliance_status_paragraph = get_text_under_header(driver, header)
+    if compliance_status_paragraph is None : return "Not found"
 
     if "partially" in compliance_status_paragraph:
         return partially_compliant_format
@@ -73,7 +74,7 @@ def extract_who_carried_out(who_tested_sentence):
     match = re.search(pattern, who_tested_sentence)
     if match:
         return match.group(1).strip()
-    return "Not found"
+    return None
 
 
 def who_tested_by(driver):
@@ -83,7 +84,7 @@ def who_tested_by(driver):
     else : return extract_who_carried_out(who_tested_sentence).capitalize()
 
 def iterate_through_headers(driver, xpath_filter):
-    result = 'Not found'
+    result = None
     for i in range(1, 7):
         xpath = f"//h{i}" + xpath_filter
         try:
