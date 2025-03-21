@@ -32,6 +32,7 @@ def get_last_tested_date(driver):
     return get_date_by_keywords(driver, "last tested on")
 
 def days_since_last_tested(date_tested):
+    if date_tested is None : return "Not found"
     return (datetime.now() - datetime.strptime(date_tested, output_date_format)).days
 
 def extract_sentences_from_page(driver):
@@ -53,6 +54,7 @@ def get_date_by_keywords(driver, text):
 def compliance_status(driver):
     header = "Compliance status"
     compliance_status_paragraph = get_text_under_header(driver, header)
+    if compliance_status_paragraph is None : return "Not found"
 
     if "partially" in compliance_status_paragraph:
         return partially_compliant_format
@@ -95,6 +97,7 @@ def iterate_through_headers(driver, xpath_filter):
 def wcag_version(driver):
     header = "Compliance status"
     compliance_status_paragraph = get_text_under_header(driver, header)
+    if compliance_status_paragraph is None : return "Not found"
 
     if "2.1" in compliance_status_paragraph:
         return "2.1"

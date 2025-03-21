@@ -28,7 +28,8 @@ def home(request):
             if enable_ai:
                 ai_model = form.cleaned_data['ai_model']
                 system_prompt = form.cleaned_data['system_prompt']
-                ollama_config = OllamaConfig(ai_model, system_prompt)
+                options = form.cleaned_data['options']
+                ollama_config = OllamaConfig(ai_model, system_prompt, options)
             config = ScraperConfig(file_path, output_file_path, headless_mode, ollama_config)
             try:
                 result = run_logic(config)

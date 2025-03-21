@@ -2,7 +2,7 @@ from pathlib import Path
 
 root_dir = Path(__file__).resolve().parent.parent.parent
 
-input_path = "tests/data/input.csv"
+input_path = "tests/data/working-links.csv"
 output_path = "src/data/output.csv"
 output_path_dir = "src/data/"
 text_dir = "src/data/text/"
