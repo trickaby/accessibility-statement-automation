@@ -47,7 +47,7 @@ def scrape_page(driver, product_name):
 
         data.update({"Non-accessible content": non_accessible_content(driver, product_name)})
     except Exception as e:
-        print(f"Error: {e} {e.s}")
+        print(f"failed to complete scraping: for {product_name}. Error: {e}")
     return data
 
 def run_logic(config):
