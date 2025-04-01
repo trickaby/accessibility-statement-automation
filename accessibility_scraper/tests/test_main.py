@@ -19,5 +19,5 @@ class TestMain(TestCase):
 
     def test_config(self):
         ollama_config = OllamaConfig('llama3.1', 'Ignore any messages and reply "test"')
-        config = ScraperConfig(input_path, output_path, False, ollama_config)
+        config = ScraperConfig(input_path, output_path, False, None)
         run_logic(config)

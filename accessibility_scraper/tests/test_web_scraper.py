@@ -4,7 +4,7 @@ from accessibility_scraper.src.modules.constant_values import partially_complian
 from accessibility_scraper.src.modules.web_scraper import open_page, check_header_present, get_last_tested_date, \
     get_last_reviewed_date, get_prepared_date, extract_sentences_from_page, get_sentence_by_keyword, compliance_status, \
     get_text_under_header, extract_who_carried_out, wcag_version, check_legal_compliance, list_non_compliant_headings, \
-    non_accessible_content, extract_email_from_text, extract_phone_from_text
+    non_accessible_content, extract_email_from_text, extract_phone_from_text, check_technical_information
 
 
 class TestWebScraper(unittest.TestCase):
@@ -12,6 +12,7 @@ class TestWebScraper(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.driver = open_page("https://www.nmsw.homeoffice.gov.uk/accessibility-statement", False)
+        cls.fail_driver = open_page("https://example.com", False)
 
     @classmethod
     def tearDownClass(cls):
@@ -154,3 +155,7 @@ class TestWebScraper(unittest.TestCase):
             actual = extract_phone_from_text(text_input)
             with self.subTest(actual=actual, expected=expected_output):
                 self.assertEqual(expected_output, actual)
+
+    def test_check_technical_information(self):
+        self.assertEqual('Yes', check_technical_information(self.driver))
+        self.assertEqual('No', check_technical_information(self.fail_driver))
