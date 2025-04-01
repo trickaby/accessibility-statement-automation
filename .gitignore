@@ -6,3 +6,4 @@
 /accessibility_scraper/src/data/*
 /media/
 *.sqlite3
+__pycache__/
