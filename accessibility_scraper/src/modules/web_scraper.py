@@ -145,7 +145,11 @@ def extract_email_from_text(text):
     match = re.search(email_pattern, text)
     return match.group(0).replace(" ", "") if match else "N/A"
 
-
+def check_technical_information(driver):
+    technical_information_text = ("The Home Office is committed to making its website accessible, in accordance with the Public Sector Bodies"
+                                  " (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018.")
+    elements = driver.find_elements("xpath", f"//*[contains(text(), '{technical_information_text}')]")
+    return "Yes" if elements else "No"
 
 def feedback_contact_email(driver):
     text = get_text_under_header(driver, "Feedback and contact information")
