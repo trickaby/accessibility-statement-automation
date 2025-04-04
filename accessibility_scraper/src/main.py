@@ -4,7 +4,7 @@ from accessibility_scraper.src.modules.web_scraper import get_prepared_date, get
     get_last_tested_date, days_since_last_tested, who_tested_by, check_header_present, list_non_compliant_headings, \
     check_legal_compliance, compliance_status, wcag_version, feedback_contact_email, feedback_contact_phone, \
     reporting_contact_email, reporting_contact_phone, non_accessible_content, open_page, extract_non_accessible_text, \
-    check_technical_information
+    check_technical_information, is_statement_compliant
 
 
 def scrape_page(driver, product_name):
@@ -18,7 +18,8 @@ def scrape_page(driver, product_name):
         dates.update({"Last tested date": date_last_tested})
         data.update(dates)
 
-        data.update({"Days Since Last Tested": days_since_last_tested(date_last_tested)})
+        days_since_last_test = days_since_last_tested(date_last_tested)
+        data.update({"Days Since Last Tested": days_since_last_test})
 
         data.update({"Who Tested By": who_tested_by(driver)})
 
@@ -28,15 +29,20 @@ def scrape_page(driver, product_name):
             "Enforcement Procedure - wording": check_header_present(driver, 'Enforcement procedure'),
             "Technical information - wording": check_technical_information(driver),
         }
-        legal_wording.update({"Legal compliance - wording": check_legal_compliance(legal_wording)})
+
+        legal_compliance = check_legal_compliance(legal_wording)
+        legal_wording.update({"Legal compliance - wording": legal_compliance})
         legal_wording.update({"Legal wording not present": list_non_compliant_headings(legal_wording)})
 
         data.update(legal_wording)
 
+        wcag = wcag_version(driver)
         data.update({
             "Compliance Status": compliance_status(driver),
-            "WCAG": wcag_version(driver),
+            "WCAG": wcag,
         })
+
+        data.update({"Statement compliant": is_statement_compliant(days_since_last_test, legal_compliance, wcag)})
 
         data.update({
             "Feedback contact email": feedback_contact_email(driver),

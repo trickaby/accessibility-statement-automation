@@ -4,7 +4,8 @@ from accessibility_scraper.src.modules.constant_values import partially_complian
 from accessibility_scraper.src.modules.web_scraper import open_page, check_header_present, get_last_tested_date, \
     get_last_reviewed_date, get_prepared_date, extract_sentences_from_page, get_sentence_by_keyword, compliance_status, \
     get_text_under_header, extract_who_carried_out, wcag_version, check_legal_compliance, list_non_compliant_headings, \
-    non_accessible_content, extract_email_from_text, extract_phone_from_text, check_technical_information
+    non_accessible_content, extract_email_from_text, extract_phone_from_text, check_technical_information, \
+    is_statement_compliant
 
 
 class TestWebScraper(unittest.TestCase):
@@ -17,6 +18,7 @@ class TestWebScraper(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         cls.driver.quit()
+        cls.fail_driver.quit()
 
     def test_scrape_page(self):
         title = self.driver.title
@@ -87,10 +89,12 @@ class TestWebScraper(unittest.TestCase):
 
     def test_extract_who_carried_out(self):
         test_cases = [
+            (None, 'Not found'),
             ("Testing was carried out internally by the Home Office.", "the Home Office"),
             ("The test was carried out internally by the Home Office.", "the Home Office"),
-            ("incorrectly formatted string", None),
-            ("This was carried by a donkey", None)
+            ("incorrectly formatted string", 'Not found'),
+            ("This was carried by a donkey", 'Not found'),
+            ('', 'Not found'),
         ]
         for sentence, expected_output in test_cases:
             actual = extract_who_carried_out(sentence)
@@ -159,3 +163,21 @@ class TestWebScraper(unittest.TestCase):
     def test_check_technical_information(self):
         self.assertEqual('Yes', check_technical_information(self.driver))
         self.assertEqual('No', check_technical_information(self.fail_driver))
+
+    def test_is_statement_compliant(self):
+        test_cases = [
+            (1, 'Yes', '2.2', 'Yes'),
+            (364, 'Yes', '2.2', 'Yes'),
+            (365, 'Yes', '2.2', 'No'),
+            (366, 'Yes', '2.2', 'No'),
+            ('Not found', '2.2', 'Yes', 'No'),
+            (1, 'Yes', 'No', 'No'),
+            (1, 'No', '2.2', 'No'),
+            (1, 'Yes', 'Not found', 'No'),
+            (1, 'Not found', '2.2', 'No'),
+            (None, None, None, 'No'),
+        ]
+        for date, legal_compliance, wcag, expected_output in test_cases:
+            actual = is_statement_compliant(date, legal_compliance, wcag)
+            with self.subTest(actual=actual, expected=expected_output):
+                self.assertEqual(expected_output, actual)

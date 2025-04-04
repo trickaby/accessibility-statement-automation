@@ -36,9 +36,11 @@ def days_since_last_tested(date_tested):
     return (datetime.now() - datetime.strptime(date_tested, output_date_format)).days
 
 def extract_sentences_from_page(driver):
-    page_content = driver.find_element("tag name", "body").text
-    return re.split(r'(?<=[.!?])\s+|\n', page_content)
-
+    try:
+        page_content = driver.find_element("tag name", "body").text
+        return re.split(r'(?<=[.!?])\s+|\n', page_content) if page_content else []
+    except NoSuchElementException:
+        return []
 
 def get_sentence_by_keyword(driver, text):
     sentences = extract_sentences_from_page(driver)
@@ -70,11 +72,13 @@ def get_text_under_header(driver, header_text):
 
 def extract_who_carried_out(who_tested_sentence):
     pattern = r"carried out(?: [\w\s]+)? by ([\w\s]+)"
-
-    match = re.search(pattern, who_tested_sentence)
-    if match:
-        return match.group(1).strip()
-    return None
+    try:
+        match = re.search(pattern, who_tested_sentence)
+        if match:
+            return match.group(1).strip()
+    except TypeError:
+        pass
+    return 'Not found'
 
 
 def who_tested_by(driver):
@@ -111,7 +115,7 @@ def check_legal_compliance(headings):
 def list_non_compliant_headings(headings):
     non_compliant_list = []
     for heading, compliance in headings.items():
-        if compliance == "No" :
+        if heading != "Legal compliance - wording" and compliance == "No" :
             non_compliant_list.append(heading)
     if not non_compliant_list:
         return "N/A"
@@ -150,6 +154,13 @@ def check_technical_information(driver):
                                   " (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018.")
     elements = driver.find_elements("xpath", f"//*[contains(text(), '{technical_information_text}')]")
     return "Yes" if elements else "No"
+
+def is_statement_compliant(days_since_last_test=365, legal_compliance=None, wcag=None):
+    try:
+        days = int(days_since_last_test)
+        return 'Yes' if days < 365 and legal_compliance == 'Yes' and wcag == '2.2' else 'No'
+    except (ValueError, TypeError):
+        return 'No'
 
 def feedback_contact_email(driver):
     text = get_text_under_header(driver, "Feedback and contact information")
