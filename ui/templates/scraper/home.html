@@ -2,29 +2,29 @@
 <html>
 <head>
     <title>Upload a file | Accessibility Statement Automation</title>
-    <script>
-    function toggleAIConfig() {
-        var checkbox = document.getElementById("id_enable_ai");
-        var aiFields = document.querySelectorAll(".ai-config");
+<!--    <script>-->
+<!--    function toggleAIConfig() {-->
+<!--        var checkbox = document.getElementById("id_enable_ai");-->
+<!--        var aiFields = document.querySelectorAll(".ai-config");-->
 
-        aiFields.forEach(function(field) {
-            if (checkbox.checked) {
-                field.disabled = false;
-            } else {
-                field.disabled = true;
-            }
-        });
-    }
+<!--        aiFields.forEach(function(field) {-->
+<!--            if (checkbox.checked) {-->
+<!--                field.disabled = false;-->
+<!--            } else {-->
+<!--                field.disabled = true;-->
+<!--            }-->
+<!--        });-->
+<!--    }-->
 
-    document.addEventListener("DOMContentLoaded", toggleAIConfig);
-    </script>
+<!--    document.addEventListener("DOMContentLoaded", toggleAIConfig);-->
+<!--    </script>-->
 </head>
 <body>
-    <h1>Step 1: Upload a CSV File</h1>
+    <h1>Accessibility scraper</h1>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Upload and Run</button>
+        <button type="submit">Run</button>
     </form>
 </body>
 </html>

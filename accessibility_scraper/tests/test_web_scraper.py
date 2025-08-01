@@ -2,9 +2,9 @@ import unittest
 
 from accessibility_scraper.src.modules.constant_values import partially_compliant_format
 from accessibility_scraper.src.modules.web_scraper import open_page, check_header_present, get_last_tested_date, \
-    get_last_reviewed_date, get_prepared_date, extract_sentences_from_page, get_sentence_by_keyword, compliance_status, \
+    get_last_reviewed_date, get_prepared_date, extract_sentences_from_page, get_sentence_by_keyword, check_compliance_status, \
     get_text_under_header, extract_who_carried_out, wcag_version, check_legal_compliance, list_non_compliant_headings, \
-    non_accessible_content, extract_email_from_text, extract_phone_from_text, check_technical_information
+    check_non_accessible_content, extract_email_from_text, extract_phone_from_text, check_technical_information
 
 
 class TestWebScraper(unittest.TestCase):
@@ -68,7 +68,7 @@ class TestWebScraper(unittest.TestCase):
                 self.assertEqual(expected_output, actual)
 
     def test_compliance_status(self):
-        actual = compliance_status(self.driver)
+        actual = check_compliance_status(self.driver)
         self.assertEqual(partially_compliant_format, actual)
 
     def test_get_text_under_header(self):
@@ -124,7 +124,7 @@ class TestWebScraper(unittest.TestCase):
                 self.assertEqual(expected_output, actual)
 
     def test_non_accessible_content(self):
-        actual = non_accessible_content(self.driver, "TEST")
+        actual = check_non_accessible_content(self.driver, "TEST")
         self.assertIsNotNone(actual)
 
     def test_extract_email_from_text(self):
