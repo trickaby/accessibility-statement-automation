@@ -20,7 +20,7 @@ def open_page(url, is_headless):
 
 def check_header_present(driver, header_text):
     header = iterate_through_headers(driver, f"[contains(text(), '{header_text}')]")
-    return "Yes" if header else "No"
+    return bool(header)
 
 def get_prepared_date(driver):
     return get_date_by_keywords(driver,"prepared on")
@@ -51,7 +51,7 @@ def get_date_by_keywords(driver, text):
     sentence = get_sentence_by_keyword(driver, text)
     return extract_date_from_text(sentence)
 
-def compliance_status(driver):
+def check_compliance_status(driver):
     header = "Compliance status"
     compliance_status_paragraph = get_text_under_header(driver, header)
     if compliance_status_paragraph is None : return "Not found"
@@ -117,9 +117,8 @@ def list_non_compliant_headings(headings):
         return "N/A"
     return ", ".join(non_compliant_list)
 
-def non_accessible_content(driver, product_name):
-    text_file_uri = write_text_to_file(product_name + " - Non-accessible content.txt", extract_non_accessible_text(driver))
-    return f"=HYPERLINK(\"{text_file_uri}\", \"Link to text\")"
+def check_non_accessible_content(driver, product_name):
+    return extract_non_accessible_text(driver)
 
 def extract_non_accessible_text(driver):
     elements = driver.find_elements("xpath", "//h3/following-sibling::*[not(self::h1 or self::h2 or self::h4 or self::h5 or self::h6)]")
@@ -149,14 +148,14 @@ def check_technical_information(driver):
     technical_information_text = ("The Home Office is committed to making its website accessible, in accordance with the Public Sector Bodies"
                                   " (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018.")
     elements = driver.find_elements("xpath", f"//*[contains(text(), '{technical_information_text}')]")
-    return "Yes" if elements else "No"
+    return bool(elements)
 
-def feedback_contact_email(driver):
+def check_feedback_contact_email(driver):
     text = get_text_under_header(driver, "Feedback and contact information")
     return extract_email_from_text(text)
 
 
-def feedback_contact_phone(driver):
+def check_feedback_contact_phone(driver):
     text = get_text_under_header(driver, "Feedback and contact information")
     return extract_phone_from_text(text)
 
